@@ -1,10 +1,12 @@
-import {useState, useEffect, MouseEvent} from 'react';
+import {useState, useEffect, MouseEvent, useCallback} from 'react';
 import axios, {AxiosResponse, AxiosError} from 'axios';
 
 interface TodoType {
   _id: string;
   name: string;
 };
+
+const url = 'http://localhost:9000/api/todo';
 
 const App = () => {
   const [nameTodo, setNameTodo] = useState('');
@@ -13,13 +15,32 @@ const App = () => {
   const addTodo = (event: MouseEvent) => {
     event.preventDefault();
 
-    const url = 'http://localhost:9000/api/todo';
     axios
       .post(url, {name: nameTodo})
       .then((data: AxiosResponse) => {
         setTodoList([...todoList, data.data]);
       }).catch((error: AxiosError) => console.log('error', error));
   };
+
+  const getTodo = useCallback(() => {
+    axios
+      .get(url)
+      .then((data: AxiosResponse) => {
+        setTodoList(data.data);
+      }).catch((error: AxiosError) => console.log('error', error));
+  }, []);
+
+  const removeTodo = (id: string) => {
+    axios
+      .delete(url, {params: {id}})
+      .then(() => {
+        setTodoList(todoList.filter((todo) => todo._id !== id));
+      }).catch((error: AxiosError) => console.log('error', error));
+  };
+
+  useEffect(() => {
+    getTodo();
+  }, [getTodo]);
 
   return (
     <div className="container mx-auto">
@@ -50,6 +71,7 @@ const App = () => {
                 {todo.name}
 
                 <button
+                  onClick={() => removeTodo(todo._id)}
                   className="px-4 py-3 rounded-r-md text-white focus:outline-none bg-red-600 hover:bg-red-700 text-sm"
                 >
                   Remove

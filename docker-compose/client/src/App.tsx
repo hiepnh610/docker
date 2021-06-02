@@ -1,24 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {useState, useEffect, MouseEvent} from 'react';
+import axios, {AxiosResponse, AxiosError} from 'axios';
 
-function App() {
+interface TodoType {
+  _id: string;
+  name: string;
+};
+
+const App = () => {
+  const [nameTodo, setNameTodo] = useState('');
+  const [todoList, setTodoList] = useState<TodoType[]>([]);
+
+  const addTodo = (event: MouseEvent) => {
+    event.preventDefault();
+
+    const url = 'http://localhost:9000/api/todo';
+    axios
+      .post(url, {name: nameTodo})
+      .then((data: AxiosResponse) => {
+        setTodoList([...todoList, data.data]);
+      }).catch((error: AxiosError) => console.log('error', error));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container mx-auto">
+      <div className="grid grid-cols-12 gap-8 mt-8">
+        <form className="flex col-start-5 col-span-4">
+          <input
+            type="text"
+            className="outline-none border border-solid border-gray-300 bg-white px-4 py-2 w-full rounded-l-md"
+            placeholder="Add a todo."
+            onChange={(event) => setNameTodo(event.target.value)}
+          />
+
+          <button
+            onClick={(event: MouseEvent) => addTodo(event)}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-r-md focus:outline-none"
+          >
+            Add
+          </button>
+        </form>
+
+        {!!todoList.length && (
+          <div className="flex flex-col col-start-5 col-span-4">
+            {todoList.map((todo: TodoType) => (
+              <div
+                key={todo._id}
+                className="bg-white shadow-md rounded-md flex items-center justify-between pl-4 mb-4"
+              >
+                {todo.name}
+
+                <button
+                  className="px-4 py-3 rounded-r-md text-white focus:outline-none bg-red-600 hover:bg-red-700 text-sm"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

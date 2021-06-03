@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 
 import services from '../services';
 
-const createTodo = async (req: Request, res: Response) => {
+const createTodo = async (req: Request, res: Response): Promise<void> => {
   const {name} = req.body;
 
   if (!name) {
@@ -24,7 +24,7 @@ const createTodo = async (req: Request, res: Response) => {
   }
 };
 
-const getTodo = async (req: Request, res: Response) => {
+const getTodo = async (_req: Request, res: Response): Promise<void> => {
   try {
     const todo = await services.todo.getTodo();
 
@@ -36,13 +36,19 @@ const getTodo = async (req: Request, res: Response) => {
   }
 };
 
-const removeTodo = async (req: Request, res: Response) => {
+const removeTodo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {id} = req.query;
+    const {id}: {id?: string} = req.query;
 
-    if (id) {
-      await services.todo.removeTodo(id);
+    if (!id) {
+      res.status(400).json({
+        message: 'The id field is missing.',
+      });
+
+      return;
     }
+
+    await services.todo.removeTodo(id);
 
     res.status(200).json({message: 'Removed.'});
   } catch (error) {

@@ -1,7 +1,7 @@
 import Todo, {ITodo} from '../models/todo';
-import type {TodoType} from '../types';
+import type {TodoType, DeleteOneType} from '../types';
 
-const createTodo = async (payload: TodoType) => {
+const createTodo = async (payload: TodoType): Promise<ITodo> => {
   const {name} = payload;
 
   const todo: ITodo = new Todo({name});
@@ -9,11 +9,11 @@ const createTodo = async (payload: TodoType) => {
   return await todo.save();
 };
 
-const getTodo = async () => {
+const getTodo = async (): Promise<ITodo[]> => {
   return await Todo.find();
 };
 
-const removeTodo = async (id: string) => {
+const removeTodo = async (id: string): Promise<DeleteOneType> => {
   const query = {_id: id};
   return await Todo.deleteOne(query);
 };

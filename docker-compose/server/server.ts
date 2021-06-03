@@ -37,7 +37,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(limiter);
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.render('index');
 });
 

@@ -10,6 +10,6 @@ RUN yarn install
 
 COPY . .
 
-EXPOSE 9000:9000
+EXPOSE 9000
 
 CMD [ "nodemon", "server.ts" ]

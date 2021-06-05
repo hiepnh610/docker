@@ -19,7 +19,7 @@ const App = () => {
       .post(url, {name: nameTodo})
       .then((data: AxiosResponse) => {
         setTodoList([...todoList, data.data]);
-      }).catch((error: AxiosError) => console.log('error', error));
+      }).catch((error: AxiosError) => console.log('error', error.response));
   };
 
   const getTodo = useCallback(() => {
@@ -27,7 +27,7 @@ const App = () => {
       .get(url)
       .then((data: AxiosResponse) => {
         setTodoList(data.data);
-      }).catch((error: AxiosError) => console.log('error', error));
+      }).catch((error: AxiosError) => console.log('error', error.response));
   }, []);
 
   const removeTodo = (id: string) => {
@@ -35,7 +35,7 @@ const App = () => {
       .delete(url, {params: {id}})
       .then(() => {
         setTodoList(todoList.filter((todo) => todo._id !== id));
-      }).catch((error: AxiosError) => console.log('error', error));
+      }).catch((error: AxiosError) => console.log('error', error.response));
   };
 
   useEffect(() => {

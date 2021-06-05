@@ -6,7 +6,7 @@ interface TodoType {
   name: string;
 };
 
-const url = 'http://localhost:9000/api/todo';
+const url = 'http://server:9000/api/todo';
 
 const App = () => {
   const [nameTodo, setNameTodo] = useState('');

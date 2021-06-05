@@ -19,7 +19,7 @@ const limiter: RateLimit = rateLimit({
   windowMs: 1000,
   max: 10,
 });
-const mongoUri = 'mongodb://localhost:27017/todo';
+const mongoUri = 'mongodb://mongo:27017/todo';
 
 mongoose.connect(mongoUri, {
   keepAlive: true,
